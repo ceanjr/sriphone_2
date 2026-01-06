@@ -85,11 +85,27 @@ sriphone/
       └── (ícones adicionais)
 ```
 
-### Upload de imagens da pasta legado:
+### Upload de imagens necessárias:
 
-1. Acesse Cloudinary Media Library
-2. Crie a estrutura de pastas acima
-3. Faça upload das imagens de `/legado/public/images/`
+**IMPORTANTE:** O projeto usa apenas Cloudinary, sem imagens locais.
+
+1. Acesse [Cloudinary Media Library](https://console.cloudinary.com/console/media_library)
+2. Crie a pasta `sriphone/landing/`
+3. Faça upload das seguintes imagens:
+   - `logo-fundo.webp` (logo do site)
+   - `barbudo.webp` (imagem hero)
+   - `insta.webp` (ícone Instagram)
+   - `arrow-down.svg` (seta animada)
+
+**Onde obter as imagens:**
+- Extraia do site antigo em Astro (pasta `/legado/public/images/`)
+- Ou solicite as imagens originais
+
+**Verificação:**
+Após upload, teste se a URL funciona:
+```
+https://res.cloudinary.com/SEU_CLOUD_NAME/image/upload/sriphone/landing/logo-fundo.webp
+```
 
 ---
 
