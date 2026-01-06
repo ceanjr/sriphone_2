@@ -1,0 +1,123 @@
+<section class="mapa">
+    <div class="container">
+        <div class="informacoes">
+            <h2>Onde estamos</h2>
+            <div class="endereco">
+                <p>
+                    Av. Frei Benjamin, 2427 - Brasil, Vitória da Conquista - BA,
+                    45051-075
+                </p>
+                <p>Pátio Brasil - 1º Andar - Sala 109</p>
+            </div>
+
+            <div class="funcionamento">
+                <p><strong>Funcionamento:</strong></p>
+                <p>Segunda a Sexta: 9h às 18h</p>
+                <p>Sábado: 9h às 13h</p>
+                <p>Domingo: Fechado</p>
+            </div>
+            <div class="contato">
+                <p><strong>Contato:</strong></p>
+                <p>
+                    Telefone: <a href="tel:+5577981022246" class="telefone"
+                        >(77) 98102-2246</a
+                    >
+                </p>
+                <p>sriphonefinanceiro@gmail.com</p>
+            </div>
+        </div>
+        <div class="map-container">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241.02940971318205!2d-40.85382426833111!3d-14.854943494569762!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7463b65867a14e1%3A0x10e79662a50bb7db!2sSr%20iPhone%20-%20Vit%C3%B3ria%20da%20Conquista!5e0!3m2!1spt-BR!2sbr!4v1761616029401!5m2!1spt-BR!2sbr"
+                width="600"
+                height="450"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+</section>
+
+<style>
+    .informacoes {
+        line-height: 1.6;
+    }
+
+    .informacoes .endereco {
+        margin-bottom: 1.5rem;
+    }
+
+    .informacoes .funcionamento {
+        margin-bottom: 1.5rem;
+
+        & strong {
+            font-size: 1.2rem;
+        }
+    }
+
+    .informacoes .contato {
+        margin-bottom: 1.5rem;
+
+        & strong {
+            font-size: 1.2rem;
+        }
+
+        & .telefone {
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+
+            &:hover {
+                opacity: 0.8;
+                transition: opacity 0.3s ease;
+            }
+        }
+    }
+
+    .mapa {
+        position: relative;
+        text-align: center;
+        padding: 3rem 1rem;
+        background-color: var(--cor-fundo-escuro);
+    }
+
+    .mapa h2 {
+        margin-bottom: 1rem;
+        font-family: 'Halenoir', sans-serif;
+        font-size: 1.8rem;
+    }
+
+    .map-container {
+        height: 250px;
+    }
+
+    .map-container iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        filter: grayscale(60%) invert(90%) brightness(85%) contrast(105%);
+    }
+
+    @media (min-width: 768px) {
+        .mapa .container {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-around;
+            gap: 1.5rem;
+        }
+
+        .mapa h2 {
+            font-size: 2.5rem;
+        }
+
+        .map-container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+    }
+</style>

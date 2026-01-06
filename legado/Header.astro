@@ -1,0 +1,183 @@
+---
+// src/components/Header.astro
+const currentPath = Astro.url.pathname
+const isCatalogPage = currentPath === '/catalogo' || currentPath === '/catalogo/' || currentPath.includes('/catalogo')
+---
+
+<header class="header">
+    <div class="container">
+        <a href="/">
+            <img
+                src="/images/logo-fundo.webp"
+                alt="Sr. IPHONE Logo"
+                class="logo"
+                fetchpriority="high"
+                decoding="async"
+            />
+        </a>
+        <nav class="nav">
+            {!isCatalogPage && (
+                <a href="/catalogo">Catálogo</a>
+            )}
+            {isCatalogPage && (
+                <>
+                    <!-- Link Auth -->
+                    <a id="link-auth" href="/admin/login" class="btn-auth">
+                        <span>Admin</span>
+                    </a>
+                </>
+            )}
+        </nav>
+    </div>
+</header>
+
+<style>
+    .header {
+        background-color: var(--cor-fundo-escuro);
+        padding: 1rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 1px solid #1a1a1a;
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        height: 34px;
+        width: auto;
+        transition: opacity 0.3s ease;
+    }
+
+    .logo:hover {
+        opacity: 0.8;
+    }
+
+    .nav {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+    }
+
+    .nav a {
+        color: var(--cor-secundaria);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        background-color: var(--cor-texto);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+    }
+
+    .nav a:hover {
+        opacity: 0.8;
+        transform: translateY(-1px);
+    }
+
+    .btn-auth {
+        display: inline-flex;
+        align-items: center;
+        background: transparent;
+        border: 1px solid #2a2a2a;
+        color: #fff;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        text-decoration: none;
+    }
+
+    .btn-auth:hover {
+        background: #fff;
+        color: #000;
+        border-color: #fff;
+    }
+
+    .btn-auth svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    @media (min-width: 768px) {
+        .logo {
+            height: 50px;
+        }
+        
+        .nav a {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-auth {
+            font-size: 1rem;
+            padding: 0.625rem 1.25rem;
+        }
+
+        .btn-auth svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+</style>
+
+{isCatalogPage && (
+    <script>
+        import { authService } from '../lib/supabase'
+
+        const linkAuth = document.getElementById('link-auth') as HTMLAnchorElement | null
+        let isAuthenticated = false;
+
+        async function checkAuth() {
+            try {
+                isAuthenticated = await authService.isAuthenticated();
+                updateUI();
+            } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                isAuthenticated = false;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            if (!linkAuth) return;
+
+            if (isAuthenticated) {
+                // Usuário autenticado - mostrar link Dashboard
+                linkAuth.href = '/admin/dashboard';
+                linkAuth.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Dashboard</span>
+                `;
+            } else {
+                // Usuário não autenticado - mostrar link Admin
+                linkAuth.href = '/admin/login';
+                linkAuth.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H15M10 17L15 12L10 7M15 12H3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Admin</span>
+                `;
+            }
+        }
+
+        // Inicializar
+        checkAuth();
+
+        // Escutar mudanças de autenticação
+        authService.onAuthStateChange((session) => {
+            isAuthenticated = session !== null;
+            updateUI();
+        });
+    </script>
+)}
