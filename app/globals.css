@@ -60,8 +60,11 @@
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
   body {
-    @apply antialiased;
+    @apply bg-background text-foreground antialiased;
   }
 }
 
