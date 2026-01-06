@@ -5,17 +5,27 @@ Esta pasta contém todas as constantes reutilizáveis do projeto Sr. IPHONE.
 ## 📁 Estrutura
 
 ### `colors.ts`
-Cores do design e classes Tailwind correspondentes.
+Cores do design e classes Tailwind correspondentes. **Sincronizado com `tailwind.config.ts`**.
 
 ```typescript
-import { COLORS, COLOR_CLASSES } from "@/lib/constants";
+import { COLORS, COLOR_CLASSES, FONT_CLASSES } from "@/lib/constants";
 
-// CSS-in-JS
+// CSS-in-JS (evite quando possível)
 const style = { background: COLORS.background.dark };
 
-// Classes Tailwind
+// Classes Tailwind (recomendado)
 <div className={COLOR_CLASSES.background.dark}>
+
+// Classes de fonte
+<h1 className={FONT_CLASSES.heading}>Título</h1>
+<p className={FONT_CLASSES.body}>Corpo do texto</p>
 ```
+
+**Classes Tailwind disponíveis:**
+- Fundos: `bg-brand-dark`, `bg-brand-light`, `bg-brand-gray-light`
+- Texto: `text-text-primary-dark`, `text-text-muted-light`
+- Bordas: `border-border-dark`, `border-border-subtle-light`
+- Fontes: `font-sans` (Inter), `font-heading` (Montserrat)
 
 ### `images.ts`
 URLs das imagens do Cloudinary com helper para transformações.

@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,6 +10,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // shadcn/ui colors (mantidas para compatibilidade com componentes UI)
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -50,6 +51,42 @@ const config: Config = {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+
+        // Cores customizadas do Sr. IPHONE
+        brand: {
+          dark: "#0a0a0a",
+          light: "#ffffff",
+          "gray-light": "#f8f8f8",
+          "gray-dark": "#000000",
+        },
+        "text-primary": {
+          dark: "#ffffff",
+          light: "#000000",
+        },
+        "text-secondary": {
+          dark: "#e0e0e0",
+          light: "#333333",
+        },
+        "text-muted": {
+          dark: "#999999",
+          light: "#666666",
+        },
+        "border-dark": "#1a1a1a",
+        "border-light": "#e0e0e0",
+        "border-subtle": {
+          dark: "#2a2a2a",
+          light: "#dddddd",
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        heading: ["var(--font-montserrat)", "system-ui", "sans-serif"],
+      },
+      fontWeight: {
+        body: "400",
+        medium: "500",
+        semibold: "600",
+        bold: "700",
       },
       borderRadius: {
         lg: "var(--radius)",

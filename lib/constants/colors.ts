@@ -1,6 +1,9 @@
 /**
  * Constantes de cores do site Sr. IPHONE
  * Baseado no design legado em Astro
+ *
+ * IMPORTANTE: Estas cores estão sincronizadas com o tailwind.config.ts
+ * Use as classes Tailwind quando possível (ex: bg-brand-dark, text-text-muted-dark)
  */
 
 export const COLORS = {
@@ -8,6 +11,8 @@ export const COLORS = {
   background: {
     dark: "#0a0a0a",
     light: "#ffffff",
+    grayLight: "#f8f8f8",
+    grayDark: "#000000",
     lightGradient: "linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%)",
     darkGradient: "linear-gradient(180deg, #0a0a0a 0%, #000000 100%)",
   },
@@ -34,7 +39,7 @@ export const COLORS = {
     light: "#e0e0e0",
     subtle: {
       dark: "#2a2a2a",
-      light: "#ddd",
+      light: "#dddddd",
     },
   },
 
@@ -55,28 +60,47 @@ export const COLORS = {
 
 /**
  * Classes Tailwind correspondentes às cores do design
+ * Sincronizadas com tailwind.config.ts
  */
 export const COLOR_CLASSES = {
   background: {
-    dark: "bg-[#0a0a0a]",
-    light: "bg-white",
+    dark: "bg-brand-dark",
+    light: "bg-brand-light",
+    grayLight: "bg-brand-gray-light",
+    grayDark: "bg-brand-gray-dark",
   },
   text: {
     primary: {
-      dark: "text-white",
-      light: "text-black",
+      dark: "text-text-primary-dark",
+      light: "text-text-primary-light",
+    },
+    secondary: {
+      dark: "text-text-secondary-dark",
+      light: "text-text-secondary-light",
     },
     muted: {
-      dark: "text-[#999]",
-      light: "text-[#666]",
+      dark: "text-text-muted-dark",
+      light: "text-text-muted-light",
     },
   },
   border: {
-    dark: "border-[#1a1a1a]",
-    light: "border-[#e0e0e0]",
+    dark: "border-border-dark",
+    light: "border-border-light",
     subtle: {
-      dark: "border-[#2a2a2a]",
-      light: "border-[#ddd]",
+      dark: "border-border-subtle-dark",
+      light: "border-border-subtle-light",
     },
   },
+} as const;
+
+/**
+ * Classes de fonte para títulos e corpo
+ */
+export const FONT_CLASSES = {
+  body: "font-sans font-body", // Inter 400
+  bodyMedium: "font-sans font-medium", // Inter 500
+  bodySemibold: "font-sans font-semibold", // Inter 600
+  heading: "font-heading font-semibold", // Montserrat 600
+  headingBold: "font-heading font-bold", // Montserrat 700
+  headingExtraBold: "font-heading font-extrabold", // Montserrat 800
 } as const;
