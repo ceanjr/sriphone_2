@@ -4,14 +4,14 @@ Projeto de migração e modernização do site Sr. IPHONE de Astro para Next.js.
 
 ## 📋 Status Geral do Projeto
 
-- **Etapa Atual:** Planejamento
+- **Etapa Atual:** Etapa 1 - Landing Page (Setup Concluído)
 - **Última Atualização:** 2026-01-06
 
 ---
 
 ## 🎯 ETAPA 1: LANDING PAGE
 
-### Status: ⏳ Pendente
+### Status: 🚧 Em Andamento (Setup ✅)
 
 Migrar a landing page legado (Astro) para Next.js com melhorias de arquitetura, componentização e boas práticas.
 
@@ -79,12 +79,16 @@ Migrar a landing page legado (Astro) para Next.js com melhorias de arquitetura, 
 ### Tasks da Etapa 1
 
 #### Setup Inicial
-- [ ] Criar projeto Next.js com TypeScript
-- [ ] Configurar Tailwind CSS
-- [ ] Instalar e configurar shadcn/ui
-- [ ] Criar arquivo de variáveis de ambiente (.env.example)
-- [ ] Configurar next.config com domínios de imagem
-- [ ] Criar constantes reutilizáveis (cores, informações do site)
+- [x] Criar projeto Next.js com TypeScript
+- [x] Configurar Tailwind CSS
+- [x] Instalar e configurar shadcn/ui
+- [x] Criar arquivo de variáveis de ambiente (.env.example)
+- [x] Configurar next.config com domínios de imagem
+- [x] Criar constantes reutilizáveis (cores, informações do site, imagens)
+- [x] Configurar fontes Google (Inter + Montserrat)
+- [x] Sincronizar cores entre Tailwind e constantes
+- [x] Upload de imagens no Cloudinary
+- [x] Configurar variáveis de ambiente (.env.local)
 
 #### Componentes Base
 - [ ] Criar layout principal da landing page
