@@ -1,10 +1,10 @@
-import { SITE_INFO, FONT_CLASSES } from "@/lib/constants";
+import { SITE_INFO, FONT_CLASSES } from '@/lib/constants';
 
 export function Seminovos() {
   return (
     <section
       id="seminovos"
-      className="relative py-24 px-4 bg-gradient-to-b from-brand-light to-brand-gray-light md:py-32"
+      className="relative py-12 px-4 bg-gradient-to-b from-brand-light to-brand-gray-light md:py-32"
     >
       {/* Top border decoration */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border-light to-transparent" />
@@ -19,7 +19,7 @@ export function Seminovos() {
           </h2>
 
           {/* Big number */}
-          <div className="relative flex-shrink-0">
+          <div className="relative flex-shrink-0 mb-12">
             <strong
               className={`${FONT_CLASSES.headingExtraBold} text-[5rem] leading-none block bg-gradient-to-br from-black to-gray-600 bg-clip-text text-transparent md:text-[7rem] lg:text-[9rem]`}
             >
@@ -35,7 +35,7 @@ export function Seminovos() {
         </div>
 
         {/* Disclaimer */}
-        <p className="text-center text-text-muted-light text-xs italic mt-8 md:text-sm md:absolute md:bottom-[-40px] md:left-1/2 md:-translate-x-1/2 md:w-full md:mt-0">
+        <p className="text-center text-text-muted-light text-xs italic md:text-sm absolute bottom-5 left-1/2 -translate-x-1/2 w-[310px] md:w-full mt-0">
           {SITE_INFO.warranty.disclaimer}
         </p>
       </div>

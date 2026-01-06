@@ -1,16 +1,16 @@
-import Link from "next/link";
-import { ArrowRight, Camera, Clock, FileText } from "lucide-react";
-import { SITE_INFO, CATALOG_FEATURES, FONT_CLASSES } from "@/lib/constants";
+import Link from 'next/link';
+import { ArrowRight, Camera, Clock, FileText } from 'lucide-react';
+import { SITE_INFO, CATALOG_FEATURES, FONT_CLASSES } from '@/lib/constants';
 
 const iconMap = {
   camera: Camera,
   clock: Clock,
-  "file-text": FileText,
+  'file-text': FileText,
 };
 
 export function CatalogCTA() {
   return (
-    <section className="relative py-24 px-4 overflow-hidden bg-gradient-to-b from-brand-dark to-brand-gray-dark md:py-32">
+    <section className="relative py-12 px-4 overflow-hidden bg-gradient-to-b from-brand-dark to-brand-gray-dark md:py-32">
       <div className="container mx-auto">
         <div className="grid gap-16 md:grid-cols-2 md:gap-24 md:items-center">
           {/* Text Side */}
@@ -22,7 +22,7 @@ export function CatalogCTA() {
             <h2
               className={`${FONT_CLASSES.heading} text-text-primary-dark text-[2.5rem] leading-tight md:text-[3.5rem]`}
             >
-              Explore nossa{" "}
+              Explore nossa{' '}
               <span className="block bg-gradient-to-br from-white to-gray-500 bg-clip-text text-transparent">
                 coleção exclusiva
               </span>
@@ -73,7 +73,7 @@ export function CatalogCTA() {
           </div>
 
           {/* Visual Side - Device Mockup */}
-          <div className="relative flex items-center justify-center min-h-[500px]">
+          <div className="relative hidden md:flex items-center justify-center min-h-[500px]">
             {/* Device Frame */}
             <div className="relative w-[280px] h-[560px] bg-gradient-to-br from-border-subtle-dark to-border-dark rounded-[40px] p-3 shadow-2xl animate-[float_6s_ease-in-out_infinite]">
               {/* Screen */}
@@ -82,7 +82,7 @@ export function CatalogCTA() {
                 <div className="absolute top-4 left-1/2 -translate-x-1/2 w-[100px] h-6 bg-black rounded-b-[20px] z-10" />
 
                 {/* Content Preview */}
-                <div className="p-8 pt-12 animate-[scroll_8s_linear_infinite]">
+                <div className="p-8 pt-12">
                   {/* Header lines */}
                   <div className="space-y-2 mb-6">
                     <div className="h-3 w-[40%] bg-border-dark rounded" />
@@ -90,8 +90,8 @@ export function CatalogCTA() {
                   </div>
 
                   {/* Grid of cards */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {[1, 2, 3, 4].map((i) => (
+                  <div className="grid grid-cols-2 gap-3 mb-16">
+                    {[1, 2, 3, 4, 5, 6].map((i) => (
                       <div
                         key={i}
                         className="aspect-square bg-gradient-to-br from-border-dark to-black rounded-xl border border-border-subtle-dark animate-[pulse_3s_ease-in-out_infinite]"
@@ -99,13 +99,21 @@ export function CatalogCTA() {
                       />
                     ))}
                   </div>
+                  {/* Bottom lines */}
+                  <div className="space-y-3">
+                    <div className="h-3 w-[100%] bg-border-dark rounded" />
+                    <div className="h-3 w-[100%] bg-border-dark rounded" />
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Floating elements */}
             <div className="absolute top-[10%] right-[-50px] w-[200px] h-[200px] rounded-full bg-gradient-radial from-white/5 to-transparent animate-[float_8s_ease-in-out_infinite]" />
-            <div className="absolute bottom-[20%] left-[-30px] w-[150px] h-[150px] rounded-full bg-gradient-radial from-white/5 to-transparent animate-[float_8s_ease-in-out_infinite]" style={{ animationDelay: "2s" }} />
+            <div
+              className="absolute bottom-[20%] left-[-30px] w-[150px] h-[150px] rounded-full bg-gradient-radial from-white/5 to-transparent animate-[float_8s_ease-in-out_infinite]"
+              style={{ animationDelay: '2s' }}
+            />
           </div>
         </div>
       </div>

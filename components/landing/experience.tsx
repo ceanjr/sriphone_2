@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { SITE_INFO, FONT_CLASSES } from "@/lib/constants";
+import { useEffect, useRef, useState } from 'react';
+import { SITE_INFO, FONT_CLASSES } from '@/lib/constants';
 
 export function Experience() {
   const [count, setCount] = useState(0);
@@ -49,7 +49,7 @@ export function Experience() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 px-4 bg-brand-light md:py-32"
+      className="relative py-12 px-4 bg-brand-light md:py-32"
     >
       {/* Top border decoration */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border-light to-transparent" />
@@ -77,11 +77,11 @@ export function Experience() {
               Anos de Experiência
             </p>
             <h2
-              className={`${FONT_CLASSES.heading} text-text-primary-light text-[2rem] leading-tight mb-4 md:text-[2.5rem] lg:text-[3rem]`}
+              className={`${FONT_CLASSES.heading} text-text-primary-light text-[2rem] leading-tight mb-10 md:text-[2.5rem] lg:text-[3rem]`}
             >
               {SITE_INFO.experience.description}
             </h2>
-            <p className="text-[0.7rem] text-text-muted-light italic md:text-xs">
+            <p className="text-text-muted-light italic text-xs absolute bottom-5 md:static w-[340px] md:w-auto left-1/2 transform -translate-x-1/2 md:transform-none text-center md:text-left">
               {SITE_INFO.experience.disclaimer}
             </p>
           </div>

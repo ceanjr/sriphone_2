@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { ExternalLink } from 'lucide-react';
 import {
   IMAGES,
   SITE_INFO,
   INSTAGRAM_DYNAMIC_WORDS,
   FONT_CLASSES,
-} from "@/lib/constants";
+} from '@/lib/constants';
 
 export function InstagramCTA() {
   const [currentWord, setCurrentWord] = useState(0);
@@ -28,7 +28,7 @@ export function InstagramCTA() {
   }, []);
 
   return (
-    <section className="relative py-24 px-4 overflow-hidden bg-brand-dark md:py-32">
+    <section className="relative py-12 px-4 overflow-hidden bg-brand-dark md:py-32">
       <div className="container mx-auto relative z-10">
         <div className="flex flex-col items-center gap-12 md:flex-row md:justify-between md:items-center">
           {/* Text Content */}
@@ -40,18 +40,17 @@ export function InstagramCTA() {
             <h2
               className={`${FONT_CLASSES.heading} text-text-primary-dark text-[2rem] leading-tight mb-6 md:text-[3.5rem]`}
             >
-              Acompanhe nossas{" "}
+              Acompanhe nossas{' '}
               <span className="relative inline-block min-w-[200px]">
                 <span
                   className={`block bg-gradient-to-br from-white to-gray-500 bg-clip-text text-transparent font-bold transition-all duration-300 ${
                     isAnimating
-                      ? "opacity-0 translate-y-4 scale-95"
-                      : "opacity-100 translate-y-0 scale-100"
+                      ? 'opacity-0 translate-y-4 scale-95'
+                      : 'opacity-100 translate-y-0 scale-100'
                   }`}
                 >
                   {INSTAGRAM_DYNAMIC_WORDS[currentWord]}
                 </span>
-                <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-white to-transparent animate-[shimmer_2s_ease-in-out_infinite]" />
               </span>
             </h2>
 
@@ -72,7 +71,7 @@ export function InstagramCTA() {
             <span className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent -translate-x-full transition-transform duration-500 group-hover:translate-x-full skew-x-12" />
 
             {/* Icon */}
-            <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-white to-gray-300 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:rotate-12">
+            <div className="relative w-18 h-18 rounded-full border-[#5e5e5e] border-2 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:border-white">
               <Image
                 src={IMAGES.landing.instagram}
                 alt="Instagram"
@@ -102,7 +101,7 @@ export function InstagramCTA() {
       <div className="absolute top-[10%] right-[-50px] w-[200px] h-[200px] rounded-full bg-gradient-radial from-white/5 to-transparent pointer-events-none animate-[float_8s_ease-in-out_infinite]" />
       <div
         className="absolute bottom-[20%] left-[-30px] w-[150px] h-[150px] rounded-full bg-gradient-radial from-white/5 to-transparent pointer-events-none animate-[float_8s_ease-in-out_infinite]"
-        style={{ animationDelay: "2s" }}
+        style={{ animationDelay: '2s' }}
       />
     </section>
   );

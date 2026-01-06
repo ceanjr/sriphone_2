@@ -47,8 +47,9 @@ next-env.d.ts
 Thumbs.db
 
 # Local settings
-/legado
-/temp
+/.temp/
+/.debug/
+/.claude/
 *.md
 !README.md
 !ROADMAP.md
