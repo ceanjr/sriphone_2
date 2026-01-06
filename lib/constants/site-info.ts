@@ -58,7 +58,7 @@ export const SITE_INFO = {
 
   routes: {
     home: "/",
-    catalog: "/catalogo",
+    catalog: "/catalogo/em-construcao", // TODO: Mudar para "/catalogo" quando implementado
     catalogUnderConstruction: "/catalogo/em-construcao",
     admin: {
       login: "/admin/login",
