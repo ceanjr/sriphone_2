@@ -45,3 +45,10 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+# Local settings
+/legado
+/temp
+*.md
+!README.md
+!ROADMAP.md
