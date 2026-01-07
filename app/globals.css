@@ -115,3 +115,16 @@
     background: radial-gradient(circle, var(--tw-gradient-stops));
   }
 }
+
+/* Custom select dropdown styles */
+select option {
+  background-color: white;
+  color: black;
+}
+
+select option:hover,
+select option:focus,
+select option:checked {
+  background-color: white !important;
+  color: black !important;
+}

@@ -3,11 +3,31 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { IMAGES, SITE_INFO } from "@/lib/constants";
+import { supabase } from "@/lib/supabase/client";
 
 export function Header() {
   const pathname = usePathname();
   const isCatalogPage = pathname?.startsWith("/catalogo");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Check authentication status
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+
+    checkAuth();
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 bg-brand-dark border-b border-border-dark">
@@ -38,10 +58,10 @@ export function Header() {
 
             {isCatalogPage && (
               <Link
-                href={SITE_INFO.routes.admin.login}
+                href={isAuthenticated ? "/admin" : SITE_INFO.routes.admin.login}
                 className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-all rounded-lg border border-border-subtle-dark text-text-primary-dark hover:bg-brand-light hover:text-text-primary-light hover:border-brand-light md:px-5 md:py-2.5 md:text-base"
               >
-                <span>Admin</span>
+                <span>{isAuthenticated ? "Dashboard" : "Admin"}</span>
               </Link>
             )}
           </nav>

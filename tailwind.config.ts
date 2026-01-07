@@ -7,10 +7,17 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    // Battery badge colors
+    'bg-green-500/20',
+    'bg-yellow-500/20',
+    'text-green-500',
+    'text-yellow-500',
+  ],
   theme: {
     extend: {
       colors: {
-        // shadcn/ui colors (mantidas para compatibilidade com componentes UI)
+        // shadcn/ui colors
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -52,7 +59,7 @@ const config: Config = {
           "5": "hsl(var(--chart-5))",
         },
 
-        // Cores customizadas do Sr. IPHONE
+        // Sr. IPHONE Custom Colors
         brand: {
           dark: "#0a0a0a",
           light: "#ffffff",

@@ -39,7 +39,7 @@ export function Hero() {
       </p>
 
       {/* Scroll Arrow */}
-      <ChevronDown className="w-10 h-10 absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center justify-center text-text-primary-dark animate-bounce hover:opacity-80 transition-opacity" />
+      <ChevronDown className="w-10 h-10 absolute bottom-5 -translate-x-1/2 flex items-center justify-center text-text-primary-dark animate-bounce hover:opacity-80 transition-opacity" />
     </section>
   );
 }
