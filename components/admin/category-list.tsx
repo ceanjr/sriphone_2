@@ -70,7 +70,7 @@ function SortableCategoryItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-3 border-b border-border-dark bg-brand-gray-dark px-4 py-3 transition-colors hover:bg-border-dark ${
+      className={`flex items-center gap-3 border-b border-border-dark bg-brand-gray-dark px-4 py-3 ${
         isDragging ? "z-50 shadow-lg" : ""
       }`}
     >

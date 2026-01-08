@@ -110,13 +110,10 @@ export function CatalogContent({
   // Handle category change with URL update
   const handleCategoryChange = useCallback((categoryId: string | null) => {
     setSelectedCategoryId(categoryId);
-    // Update URL params
-    if (categoryId) {
-      router.push(`/catalogo?categoria=${categoryId}`);
-    } else {
-      router.push('/catalogo');
-    }
-  }, [router]);
+    // Update URL params without scroll
+    const url = categoryId ? `/catalogo?categoria=${categoryId}` : '/catalogo';
+    window.history.pushState({}, '', url);
+  }, []);
 
   // Resetar e buscar quando filtros mudarem
   useEffect(() => {
