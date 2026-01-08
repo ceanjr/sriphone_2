@@ -24,7 +24,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   return (
     <Link
       href={`/produto/${product.id}`}
-      className="group block rounded-lg border border-border-subtle-dark bg-brand-gray-dark p-4 transition-all hover:border-brand-light hover:shadow-lg"
+      className="group block rounded-lg border border-border-subtle-dark bg-brand-gray-dark p-4 transition-all md:hover:border-brand-light md:hover:shadow-lg"
     >
       {/* Imagem do produto */}
       <div className="relative mb-4 aspect-square overflow-hidden rounded-md bg-border-dark">
@@ -33,7 +33,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
             src={imagemPrincipal}
             alt={product.nome}
             fill
-            className="object-contain transition-transform group-hover:scale-105"
+            className="object-cover transition-transform md:group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             priority={priority}
           />
@@ -48,7 +48,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
       <div className="space-y-2">
         {/* Nome Completo do Produto */}
         <div>
-          <h3 className="font-semibold text-text-primary-dark group-hover:text-brand-light">
+          <h3 className="font-semibold text-text-primary-dark md:group-hover:text-brand-light">
             {product.nome}
           </h3>
         </div>

@@ -10,24 +10,31 @@
  * Uso: npx tsx scripts/migrate-from-old-db.ts
  */
 
+import * as dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import fetch from 'node-fetch';
 
+// Carregar variáveis de ambiente do .env.local
+dotenv.config({ path: '.env.local' });
+
 // ===== CONFIGURAÇÃO =====
+
+// ⚠️ MODO DRY RUN: true = apenas simula, false = executa de verdade
+const DRY_RUN = false;
 
 // Supabase ANTIGO (origem)
 const OLD_SUPABASE_URL = 'https://xaotzsgpepwtixzkuslx.supabase.co';
-const OLD_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhhb3R6c2dwZXB3dGl4emt1c2x4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDYzODU1OSwiZXhwIjoyMDc2MjE0NTU5fQ.4YTzXWz_IcrwJaujX1dOnK8BOYX6hSvvKMMDaccOqTE';
+const OLD_SUPABASE_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhhb3R6c2dwZXB3dGl4emt1c2x4Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDYzODU1OSwiZXhwIjoyMDc2MjE0NTU5fQ.4YTzXWz_IcrwJaujX1dOnK8BOYX6hSvvKMMDaccOqTE';
 
 // Supabase NOVO (destino) - usar as variáveis de ambiente do projeto atual
 const NEW_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const NEW_SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const NEW_SUPABASE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-// Cloudinary
-const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
-const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY!;
-const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET!;
-const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+// API do projeto (usada para upload de imagens)
+const API_BASE_URL = 'http://localhost:3000';
 
 // Clientes Supabase
 const oldSupabase = createClient(OLD_SUPABASE_URL, OLD_SUPABASE_KEY);
@@ -66,29 +73,59 @@ interface MigrationStats {
 // ===== FUNÇÕES AUXILIARES =====
 
 /**
- * Mapeia o nome da categoria antiga para o ID da categoria nova
+ * Extrai a categoria do produto pelo nome
+ * Exemplo: "iPhone 14 128GB - Azul" -> "iPhone 14"
  */
-function mapCategoryNameToId(categoriaNome: string | undefined, newCategories: NewCategory[]): string | null {
-  if (!categoriaNome) return null;
+function extractCategoryFromProductName(productName: string): string | null {
+  if (!productName) return null;
 
-  // Normalizar o nome da categoria (remover espaços, lowercase)
-  const normalized = categoriaNome.toLowerCase().trim();
+  // Regex para capturar "iPhone" seguido de um número (pode ter Pro, Plus, Max, etc depois)
+  // Exemplos: iPhone 11, iPhone 12, iPhone 13 Pro, iPhone 14 Plus, iPhone 15 Pro Max
+  const match = productName.match(/iPhone\s+(\d+)/i);
 
-  // Procurar categoria que contenha o nome
-  const category = newCategories.find(cat =>
-    cat.nome.toLowerCase().includes(normalized) ||
-    normalized.includes(cat.nome.toLowerCase())
+  if (match) {
+    const modelNumber = match[1];
+    return `iPhone ${modelNumber}`;
+  }
+
+  return null;
+}
+
+/**
+ * Mapeia o nome da categoria extraída para o ID da categoria nova
+ */
+function mapCategoryNameToId(
+  categoryName: string | null,
+  newCategories: NewCategory[]
+): string | null {
+  if (!categoryName) return null;
+
+  // Procurar categoria exata ou que contenha o nome
+  const category = newCategories.find(
+    (cat) =>
+      cat.nome.toLowerCase() === categoryName.toLowerCase() ||
+      cat.nome.toLowerCase().includes(categoryName.toLowerCase()) ||
+      categoryName.toLowerCase().includes(cat.nome.toLowerCase())
   );
 
   return category?.id || null;
 }
 
 /**
- * Faz upload de uma imagem do Supabase Storage para o Cloudinary
+ * Faz upload de uma imagem usando a API do projeto
  */
-async function uploadImageToCloudinary(imageUrl: string, productCode: string, index: number): Promise<string | null> {
+async function uploadImageViaAPI(
+  imageUrl: string,
+  productCode: string,
+  index: number
+): Promise<string | null> {
   try {
     console.log(`   📤 Fazendo upload da imagem ${index + 1}...`);
+
+    if (DRY_RUN) {
+      console.log(`   🔍 [DRY RUN] Simulando upload da imagem: ${imageUrl}`);
+      return `https://res.cloudinary.com/fake/image/upload/sriphone/products/${productCode}-${index}.jpg`;
+    }
 
     // Fazer download da imagem do Supabase
     const response = await fetch(imageUrl);
@@ -96,42 +133,36 @@ async function uploadImageToCloudinary(imageUrl: string, productCode: string, in
       throw new Error(`Falha ao baixar imagem: ${response.statusText}`);
     }
 
-    const buffer = await response.arrayBuffer();
-    const base64 = Buffer.from(buffer).toString('base64');
-    const dataUri = `data:${response.headers.get('content-type')};base64,${base64}`;
+    const blob = await response.blob();
+    const fileName = `${productCode}-${index}.jpg`;
+    const file = new File([blob], fileName, {
+      type: response.headers.get('content-type') || 'image/jpeg',
+    });
 
-    // Upload para o Cloudinary
-    const uploadResponse = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          file: dataUri,
-          upload_preset: CLOUDINARY_UPLOAD_PRESET,
-          folder: 'sriphone/products',
-          public_id: `${productCode}-${index}`,
-        }),
-      }
-    );
+    // Upload usando a API do projeto
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const uploadResponse = await fetch(`${API_BASE_URL}/api/upload`, {
+      method: 'POST',
+      body: formData,
+    });
 
     if (!uploadResponse.ok) {
       const errorText = await uploadResponse.text();
       throw new Error(`Falha no upload para Cloudinary: ${errorText}`);
     }
 
-    const uploadResult = await uploadResponse.json() as { secure_url: string };
+    const uploadResult = (await uploadResponse.json()) as {
+      url: string;
+      publicId: string;
+    };
     console.log(`   ✅ Imagem ${index + 1} enviada com sucesso`);
-    return uploadResult.secure_url;
+    return uploadResult.url;
   } catch (error) {
     console.error(`   ❌ Erro ao fazer upload da imagem ${index + 1}:`, error);
     return null;
   }
-}
-
-/**
 }
 
 /**
@@ -142,24 +173,44 @@ async function migrateProduct(
   newCategories: NewCategory[]
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    console.log(`\n🔄 Migrando: ${oldProduct.nome} (código: ${oldProduct.codigo})`);
+    console.log(
+      `\n🔄 Migrando: ${oldProduct.nome} (código: ${oldProduct.codigo})`
+    );
 
     // 1. Verificar se produto já existe no novo banco (por código)
-    const { data: existing } = await newSupabase
-      .from('produtos')
-      .select('id')
-      .eq('codigo', oldProduct.codigo)
-      .single();
+    if (!DRY_RUN) {
+      const { data: existing } = await newSupabase
+        .from('produtos')
+        .select('id')
+        .eq('codigo', oldProduct.codigo)
+        .single();
 
-    if (existing) {
-      console.log(`   ⏭️  Produto já existe no novo banco, pulando...`);
-      return { success: false, error: 'Produto já existe' };
+      if (existing) {
+        console.log(`   ⏭️  Produto já existe no novo banco, pulando...`);
+        return { success: false, error: 'Produto já existe' };
+      }
+    } else {
+      console.log(`   🔍 [DRY RUN] Verificando se produto existe...`);
     }
 
-    // 2. Mapear categoria
-    const categoria_id = mapCategoryNameToId(oldProduct.categoria, newCategories);
+    // 2. Extrair e mapear categoria do nome do produto
+    const extractedCategory = extractCategoryFromProductName(oldProduct.nome);
+    console.log(
+      `   📋 Categoria extraída do nome: ${extractedCategory || 'N/A'}`
+    );
+
+    const categoria_id = mapCategoryNameToId(extractedCategory, newCategories);
     if (!categoria_id) {
-      console.log(`   ⚠️  Categoria não encontrada: ${oldProduct.categoria}`);
+      const errorMsg = `Categoria não encontrada para: ${
+        extractedCategory || 'N/A'
+      }`;
+      console.log(`   ⚠️  ${errorMsg}`);
+      return { success: false, error: errorMsg };
+    } else {
+      const matchedCategory = newCategories.find((c) => c.id === categoria_id);
+      console.log(
+        `   ✅ Categoria encontrada: ${matchedCategory?.nome} (${categoria_id})`
+      );
     }
 
     // 3. Migrar imagens para Cloudinary
@@ -169,44 +220,66 @@ async function migrateProduct(
 
       for (let i = 0; i < oldProduct.imagens.length; i++) {
         const imageUrl = oldProduct.imagens[i];
-        const cloudinaryUrl = await uploadImageToCloudinary(imageUrl, oldProduct.codigo, i);
+        const cloudinaryUrl = await uploadImageViaAPI(
+          imageUrl,
+          oldProduct.codigo,
+          i
+        );
 
         if (cloudinaryUrl) {
           cloudinaryImages.push(cloudinaryUrl);
         }
       }
 
-      console.log(`   ✅ ${cloudinaryImages.length}/${oldProduct.imagens.length} imagens migradas`);
+      console.log(
+        `   ✅ ${cloudinaryImages.length}/${oldProduct.imagens.length} imagens migradas`
+      );
     }
 
     // 4. Criar novo produto (Supabase gerará o UUID automaticamente)
+    // Lógica de condição: se tem bateria, é seminovo. Se não tem, é novo.
+    const hasBateria = oldProduct.bateria !== null && oldProduct.bateria !== undefined;
+    const condicao: 'novo' | 'seminovo' = hasBateria ? 'seminovo' : 'novo';
+
     const newProduct = {
       codigo: oldProduct.codigo,
       nome: oldProduct.nome,
-      descricao: oldProduct.descricao || null, // Manter vazio se estiver vazio
+      descricao: oldProduct.descricao || null,
       preco: oldProduct.preco,
-      condicao: (oldProduct.condicao as 'novo' | 'seminovo') || 'seminovo',
-      cor: null, // Será adicionado manualmente depois
-      bateria: oldProduct.bateria || null,
+      condicao: condicao,
+      cor: null, // Agora permite null
+      bateria: hasBateria ? oldProduct.bateria : null,
       categoria_id: categoria_id,
       imagens: cloudinaryImages,
-      imagem_principal: cloudinaryImages.length > 0 ? cloudinaryImages[0] : null,
-      ativo: oldProduct.ativo !== false, // Default true
+      imagem_principal:
+        cloudinaryImages.length > 0 ? cloudinaryImages[0] : null,
+      ativo: oldProduct.ativo !== false,
       created_at: oldProduct.created_at || new Date().toISOString(),
     };
 
-    // 5. Inserir no novo banco
-    const { error } = await newSupabase
-      .from('produtos')
-      .insert(newProduct);
+    console.log(`   📊 Condição: ${condicao} (bateria: ${hasBateria ? oldProduct.bateria + '%' : 'N/A'})`);
 
-    if (error) {
-      throw error;
+    // 5. Inserir no novo banco (ou simular em DRY RUN)
+    if (!DRY_RUN) {
+      const { error } = await newSupabase.from('produtos').insert(newProduct);
+
+      if (error) {
+        throw error;
+      }
+      console.log(`   ✅ Produto migrado com sucesso!`);
+    } else {
+      console.log(
+        `   🔍 [DRY RUN] Produto seria inserido com os seguintes dados:`
+      );
+      console.log(`      - Nome: ${newProduct.nome}`);
+      console.log(`      - Código: ${newProduct.codigo}`);
+      console.log(`      - Categoria ID: ${newProduct.categoria_id}`);
+      console.log(`      - Imagens: ${newProduct.imagens.length}`);
+      console.log(`      - Preço: R$ ${newProduct.preco.toFixed(2)}`);
+      console.log(`   ✅ [DRY RUN] Validação bem-sucedida!`);
     }
 
-    console.log(`   ✅ Produto migrado com sucesso!`);
     return { success: true };
-
   } catch (error: any) {
     console.error(`   ❌ Erro ao migrar produto:`, error.message);
     return { success: false, error: error.message };
@@ -218,6 +291,13 @@ async function migrateProduct(
 async function migrate() {
   console.log('\n🚀 INICIANDO MIGRAÇÃO DE DADOS\n');
   console.log('================================\n');
+
+  if (DRY_RUN) {
+    console.log('⚠️  MODO DRY RUN ATIVADO');
+    console.log('   Nenhum dado será inserido no banco de dados.');
+    console.log('   Este é apenas um teste de validação.\n');
+    console.log('================================\n');
+  }
 
   const stats: MigrationStats = {
     total: 0,
@@ -237,7 +317,9 @@ async function migrate() {
     if (catError) throw catError;
 
     console.log(`✅ Encontradas ${newCategories?.length || 0} categorias\n`);
-    newCategories?.forEach(cat => console.log(`   - ${cat.nome} (${cat.id})`));
+    newCategories?.forEach((cat) =>
+      console.log(`   - ${cat.nome} (${cat.id})`)
+    );
 
     // 2. Buscar produtos do banco antigo
     console.log('\n📦 Buscando produtos do banco antigo...');
@@ -248,7 +330,9 @@ async function migrate() {
 
     if (prodError) throw prodError;
 
-    console.log(`✅ Encontrados ${oldProducts?.length || 0} produtos para migrar\n`);
+    console.log(
+      `✅ Encontrados ${oldProducts?.length || 0} produtos para migrar\n`
+    );
 
     if (!oldProducts || oldProducts.length === 0) {
       console.log('⚠️  Nenhum produto encontrado no banco antigo');
@@ -276,27 +360,43 @@ async function migrate() {
       }
 
       // Pequeno delay para não sobrecarregar as APIs
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     // 4. Relatório final
     console.log('\n\n================================');
     console.log('📊 RELATÓRIO DE MIGRAÇÃO');
     console.log('================================\n');
+
+    if (DRY_RUN) {
+      console.log('⚠️  MODO DRY RUN - Simulação concluída\n');
+    }
+
     console.log(`Total de produtos: ${stats.total}`);
-    console.log(`✅ Migrados com sucesso: ${stats.success}`);
+    console.log(
+      `✅ ${DRY_RUN ? 'Validados' : 'Migrados'} com sucesso: ${stats.success}`
+    );
     console.log(`⏭️  Pulados (já existem): ${stats.skipped}`);
     console.log(`❌ Falharam: ${stats.failed}\n`);
 
     if (stats.errors.length > 0) {
       console.log('❌ ERROS:\n');
-      stats.errors.forEach(err => {
+      stats.errors.forEach((err) => {
         console.log(`   ${err.produto}: ${err.erro}`);
       });
     }
 
-    console.log('\n✨ Migração concluída!\n');
-
+    if (DRY_RUN) {
+      console.log('\n✨ Simulação concluída!');
+      console.log('\n💡 Para executar a migração de verdade:');
+      console.log('   1. Abra o arquivo scripts/migrate-from-old-db.ts');
+      console.log('   2. Altere DRY_RUN = true para DRY_RUN = false');
+      console.log(
+        '   3. Execute novamente: npx tsx scripts/migrate-from-old-db.ts\n'
+      );
+    } else {
+      console.log('\n✨ Migração concluída!\n');
+    }
   } catch (error: any) {
     console.error('\n❌ ERRO FATAL NA MIGRAÇÃO:', error.message);
     process.exit(1);

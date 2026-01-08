@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     // Upload to Cloudinary
     const result = await cloudinary.uploader.upload(dataURI, {
       folder: "sriphone/products",
-      resource_type: "auto",
+      resource_type: "image",
     });
 
     return NextResponse.json({

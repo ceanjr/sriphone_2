@@ -5,6 +5,7 @@
 
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { AdminHeader } from "@/components/admin/admin-header";
+import { MobileBottomNav } from "@/components/admin/mobile-bottom-nav";
 
 export default function AdminLayout({
   children,
@@ -21,9 +22,12 @@ export default function AdminLayout({
         {/* Header */}
         <AdminHeader />
 
-        {/* Page Content */}
-        <main className="flex-1 p-6">{children}</main>
+        {/* Page Content - Extra padding on mobile for bottom nav */}
+        <main className="flex-1 p-6 pb-24 md:pb-6">{children}</main>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <MobileBottomNav />
     </div>
   );
 }

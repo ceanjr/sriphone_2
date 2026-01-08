@@ -10,6 +10,8 @@ import { CatalogHero } from '@/components/catalog/hero';
 import { CatalogContent } from '@/components/catalog/catalog-content';
 import { getCategorias, getProdutos } from '@/lib/supabase/queries';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Catálogo de iPhones | SriPhone',
   description:

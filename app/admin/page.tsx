@@ -7,6 +7,7 @@ import { Metadata } from "next";
 import { getCategorias, getProdutos } from "@/lib/supabase/queries";
 import { DashboardStats } from "@/components/admin/dashboard-stats";
 import { QuickActions } from "@/components/admin/quick-actions";
+import { MobileLogoutButton } from "@/components/admin/mobile-logout-button";
 
 export const metadata: Metadata = {
   title: "Dashboard - Admin",
@@ -31,6 +32,9 @@ export default async function AdminDashboard() {
           Bem-vindo ao painel administrativo
         </p>
       </div>
+
+      {/* Mobile Logout Button */}
+      <MobileLogoutButton />
 
       {/* Statistics Cards */}
       <DashboardStats

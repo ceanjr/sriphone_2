@@ -49,7 +49,9 @@ export type ProductUpdate = Partial<ProductInsert>;
  */
 export interface ProductFilters {
   searchTerm?: string;
+  termo?: string;
   categoryId?: string;
+  categoria_id?: string;
   condicao?: ProductCondition;
   ativo?: boolean;
 }
@@ -58,16 +60,18 @@ export interface ProductFilters {
  * Type para paginação de produtos
  */
 export interface ProductPagination {
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
+  page?: number;
+  pageSize?: number;
+  offset?: number;
+  limit?: number;
+  total?: number;
+  totalPages?: number;
 }
 
 /**
  * Type para resposta paginada de produtos
  */
 export interface ProductsResponse {
-  products: ProductWithCategory[];
-  pagination: ProductPagination;
+  produtos: ProductWithCategory[];
+  total: number;
 }

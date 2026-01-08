@@ -3,15 +3,15 @@
  * Lista todos os produtos com opções de editar, excluir e toggle ativo
  */
 
-import { Metadata } from "next";
-import Link from "next/link";
-import { Plus } from "lucide-react";
-import { getCategorias, getProdutosAdmin } from "@/lib/supabase/queries";
-import { ProductsContent } from "@/components/admin/products-content";
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
+import { getCategorias, getProdutosAdmin } from '@/lib/supabase/queries';
+import { ProductsContent } from '@/components/admin/products-content';
 
 export const metadata: Metadata = {
-  title: "Produtos - Admin",
-  description: "Gerenciar produtos",
+  title: 'Produtos - Admin',
+  description: 'Gerenciar produtos',
 };
 
 export default async function ProdutosPage() {
@@ -39,7 +39,7 @@ export default async function ProdutosPage() {
           className="flex items-center gap-2 rounded-md bg-brand-light px-4 py-2 font-semibold text-text-primary-light transition-opacity hover:opacity-90"
         >
           <Plus className="h-5 w-5" />
-          Novo Produto
+          Adicionar
         </Link>
       </div>
 

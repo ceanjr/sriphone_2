@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
 /**
  * Admin Products Content (Client Component)
  * Gerencia o filtro de categoria na página de produtos admin
  */
 
-import { useState, useMemo } from "react";
-import { Filter } from "lucide-react";
-import type { Category } from "@/lib/types/category";
-import type { ProductWithCategory } from "@/lib/types/product";
-import { ProductListAdmin } from "./product-list-admin";
+import { useState, useMemo } from 'react';
+import { Filter } from 'lucide-react';
+import type { Category } from '@/lib/types/category';
+import type { ProductWithCategory } from '@/lib/types/product';
+import { ProductListAdmin } from './product-list-admin';
 
 interface ProductsContentProps {
   products: ProductWithCategory[];
@@ -20,11 +20,21 @@ export function ProductsContent({
   products,
   categories,
 }: ProductsContentProps) {
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
+
+  // Filter categories with products
+  const categoriesWithProducts = useMemo(() => {
+    return categories.filter((category) => {
+      const count = products.filter(
+        (p) => p.categoria_id === category.id
+      ).length;
+      return count > 0;
+    });
+  }, [categories, products]);
 
   // Filter products based on selected category
   const filteredProducts = useMemo(() => {
-    if (!selectedCategoryId || selectedCategoryId === "") {
+    if (!selectedCategoryId || selectedCategoryId === '') {
       return products;
     }
     return products.filter((p) => p.categoria_id === selectedCategoryId);
@@ -33,8 +43,8 @@ export function ProductsContent({
   return (
     <div className="space-y-6">
       {/* Category Filter */}
-      <div className="flex items-center justify-between">
-        <div className="relative w-full max-w-xs">
+      <div className="flex-col">
+        <div className="relative w-full max-w-xs mb-2">
           <Filter className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted-dark" />
           <select
             value={selectedCategoryId}
@@ -42,7 +52,7 @@ export function ProductsContent({
             className="w-full appearance-none rounded-lg border border-border-subtle-dark bg-brand-gray-dark py-2.5 pl-10 pr-10 text-sm text-text-primary-dark transition-colors focus:border-brand-light focus:outline-none focus:ring-2 focus:ring-brand-light/20"
           >
             <option value="">Todas as Categorias</option>
-            {categories.map((category) => (
+            {categoriesWithProducts.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.nome}
               </option>
@@ -68,8 +78,8 @@ export function ProductsContent({
         {/* Results count */}
         {filteredProducts.length > 0 && (
           <div className="text-sm text-text-secondary-dark">
-            <span className="font-semibold">{filteredProducts.length}</span>{" "}
-            {filteredProducts.length === 1 ? "produto" : "produtos"}
+            <span className="font-semibold">{filteredProducts.length}</span>{' '}
+            {filteredProducts.length === 1 ? 'produto' : 'produtos'}
           </div>
         )}
       </div>

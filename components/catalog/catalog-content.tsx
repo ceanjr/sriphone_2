@@ -11,6 +11,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import type { Category } from '@/lib/types/category';
 import type { ProductWithCategory } from '@/lib/types/product';
@@ -34,12 +35,15 @@ export function CatalogContent({
   initialTotal,
   categories,
 }: CatalogContentProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [products, setProducts] =
     useState<ProductWithCategory[]>(initialProducts);
   const [total, setTotal] = useState(initialTotal);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null
+    () => searchParams.get('categoria') || null
   );
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     // Carregar preferência salva do localStorage
@@ -52,6 +56,12 @@ export function CatalogContent({
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialTotal > PRODUCTS_PER_PAGE);
+
+  // Filter categories with products
+  const categoriesWithProducts = categories.filter((category) => {
+    const count = initialProducts.filter((p) => p.categoria_id === category.id).length;
+    return count > 0;
+  });
 
   // Salvar preferência de visualização no localStorage
   useEffect(() => {
@@ -97,6 +107,17 @@ export function CatalogContent({
     [searchTerm, selectedCategoryId]
   );
 
+  // Handle category change with URL update
+  const handleCategoryChange = useCallback((categoryId: string | null) => {
+    setSelectedCategoryId(categoryId);
+    // Update URL params
+    if (categoryId) {
+      router.push(`/catalogo?categoria=${categoryId}`);
+    } else {
+      router.push('/catalogo');
+    }
+  }, [router]);
+
   // Resetar e buscar quando filtros mudarem
   useEffect(() => {
     setPage(1);
@@ -120,9 +141,9 @@ export function CatalogContent({
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <CategoryFilter
-            categories={categories}
+            categories={categoriesWithProducts}
             selectedCategoryId={selectedCategoryId}
-            onChange={setSelectedCategoryId}
+            onChange={handleCategoryChange}
           />
 
           <ViewToggle view={viewMode} onChange={setViewMode} />

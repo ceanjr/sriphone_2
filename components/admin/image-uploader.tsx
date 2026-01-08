@@ -83,20 +83,26 @@ function SortableImageItem({
       <div
         {...attributes}
         {...listeners}
-        className="absolute inset-0 cursor-grab active:cursor-grabbing"
+        className="absolute inset-0 cursor-grab select-none touch-none active:cursor-grabbing"
+        style={{
+          WebkitUserSelect: 'none',
+          userSelect: 'none',
+          touchAction: 'none',
+        }}
       >
         <Image
           src={image.url}
           alt={`Upload ${index + 1}`}
           fill
-          className="object-cover"
+          className="pointer-events-none object-cover"
           sizes="128px"
+          draggable={false}
         />
       </div>
 
       {/* Badge for main image */}
       {index === 0 && (
-        <div className="absolute left-2 top-2 rounded bg-brand-light px-2 py-1 text-xs font-semibold text-text-primary-light">
+        <div className="pointer-events-none absolute left-2 top-2 rounded bg-brand-light px-2 py-1 text-xs font-semibold text-text-primary-light">
           Principal
         </div>
       )}
@@ -104,15 +110,27 @@ function SortableImageItem({
       {/* Remove button */}
       <button
         type="button"
-        onClick={() => onRemove(image.id)}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onRemove(image.id);
+        }}
+        onTouchEnd={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!isRemoving) {
+            onRemove(image.id);
+          }
+        }}
         disabled={isRemoving}
-        className="absolute right-2 top-2 rounded-md bg-red-500/90 p-1.5 text-white opacity-0 transition-opacity hover:bg-red-600 group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
+        className="absolute right-2 top-2 z-10 rounded-md bg-red-500/90 p-2 text-white opacity-100 md:opacity-0 transition-opacity hover:bg-red-600 md:group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-50"
         title="Remover imagem"
+        style={{ touchAction: 'manipulation', pointerEvents: 'auto' }}
       >
         {isRemoving ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="h-5 w-5 animate-spin" />
         ) : (
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="h-5 w-5" />
         )}
       </button>
     </div>
