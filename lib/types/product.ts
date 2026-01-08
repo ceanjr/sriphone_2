@@ -31,7 +31,8 @@ export interface Product {
  * Usado em queries que incluem dados da categoria
  */
 export interface ProductWithCategory extends Product {
-  categoria: Category;
+  categoria?: Category;  // Legacy field name
+  categorias?: Category; // Actual field name returned by Supabase
 }
 
 /**
