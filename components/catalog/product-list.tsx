@@ -22,7 +22,7 @@ export function ProductList({ products }: ProductListProps) {
 
   // Agrupar produtos por categoria
   const groupedProducts = products.reduce((acc, product) => {
-    const categoryName = product.categoria?.nome || "Sem categoria";
+    const categoryName = product.categorias?.nome || "Sem categoria";
     if (!acc[categoryName]) {
       acc[categoryName] = [];
     }
